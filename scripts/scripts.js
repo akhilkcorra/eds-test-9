@@ -21,6 +21,7 @@ import {
 } from './aem.js';
 import { getProduct, getSkuFromUrl, trackHistory } from './commerce.js';
 import initializeDropins from './dropins.js';
+import { pushPageViewEvent } from './gtm.js';
 
 const LCP_BLOCKS = [
   'product-list-page',
@@ -344,6 +345,7 @@ export function getConsent(topic) {
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
+  pushPageViewEvent();
   loadDelayed();
 }
 

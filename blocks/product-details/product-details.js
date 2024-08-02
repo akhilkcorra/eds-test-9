@@ -11,6 +11,7 @@ import ProductDetails from '@dropins/storefront-pdp/containers/ProductDetails.js
 import { getProduct, getSkuFromUrl, setJsonLd } from '../../scripts/commerce.js';
 import { getConfigValue } from '../../scripts/configs.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
+import { pushViewItemEvent } from '../../scripts/gtm.js';
 
 // Error Handling (404)
 async function errorGettingProduct(code = 404) {
@@ -119,6 +120,8 @@ export default async function decorate(block) {
     await errorGettingProduct();
     return Promise.reject();
   }
+
+  pushViewItemEvent(product);
 
   const langDefinitions = {
     default: {
