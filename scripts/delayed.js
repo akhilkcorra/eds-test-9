@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
-import { sampleRUM } from './aem.js';
+import { loadScript, sampleRUM } from './aem.js';
 import { getConfigValue } from './configs.js';
+import { addGTM } from './gtm.js';
 import { getConsent } from './scripts.js';
 
 // Core Web Vitals RUM collection
@@ -37,3 +38,10 @@ if (getConsent('commerce-collection')) {
   import('./commerce-events-sdk.js');
   import('./commerce-events-collector.js');
 }
+
+// Third party scripts
+const hubspotUrl = await getConfigValue('hubspot-url');
+if (hubspotUrl) {
+  loadScript('//js-na1.hs-scripts.com/46947912.js', { id: 'hs-script-loader', async: 'true', defer: 'true' });
+}
+addGTM();
