@@ -22,6 +22,7 @@ import {
 import { getProduct, getSkuFromUrl, trackHistory } from './commerce.js';
 import initializeDropins from './dropins.js';
 import localeConfig from './locale.config.js';
+import { decorateLinks } from './additional-decorates.js';
 
 const LCP_BLOCKS = [
   'product-list-page',
@@ -126,6 +127,7 @@ function buildAutoBlocks(main) {
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
+  decorateLinks(main);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
