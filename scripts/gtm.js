@@ -65,4 +65,4 @@ function pushViewCartEvent() {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export { loadGTM, pushPageViewEvent, pushViewItemEvent, pushViewCartEvent };
+export { pushPageViewEvent, pushViewItemEvent, pushViewCartEvent };
