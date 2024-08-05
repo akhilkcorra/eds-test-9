@@ -10,8 +10,7 @@ import ProductDetails from '@dropins/storefront-pdp/containers/ProductDetails.js
 // Libs
 import { getProduct, getSkuFromUrl, setJsonLd } from '../../scripts/commerce.js';
 import { getConfigValue } from '../../scripts/configs.js';
-import { getMetadata } from '../../scripts/aem.js';
-import { fetchLocalizedPlaceholders } from '../../scripts/i18n.js';
+import { fetchLocalizedPlaceholders } from '../../scripts/placeholder.js';
 
 // Error Handling (404)
 async function errorGettingProduct(code = 404) {
@@ -109,12 +108,11 @@ function setMetaTags(product) {
 }
 
 export default async function decorate(block) {
-  const locale = getMetadata('locale');
   if (!window.getProductPromise) {
-    window.getProductPromise = getProduct(this.props.sku, locale);
+    window.getProductPromise = getProduct(this.props.sku);
   }
   const [product, placeholders] = await Promise.all([
-    window.getProductPromise, fetchLocalizedPlaceholders(locale, 'product')]);
+    window.getProductPromise, fetchLocalizedPlaceholders('product')]);
 
   if (!product) {
     await errorGettingProduct();

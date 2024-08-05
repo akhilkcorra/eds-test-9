@@ -21,6 +21,7 @@ import {
 } from './aem.js';
 import { getProduct, getSkuFromUrl, trackHistory } from './commerce.js';
 import initializeDropins from './dropins.js';
+import localeConfig from './locale.config.js';
 
 const LCP_BLOCKS = [
   'product-list-page',
@@ -140,12 +141,20 @@ function preloadFile(href, as) {
   document.head.appendChild(link);
 }
 
+function setHmtlLang() {
+  const metaLocale = getMetadata('locale');
+  const locale = localeConfig.locales.includes(metaLocale)
+    ? metaLocale
+    : localeConfig.defaultLocale;
+  document.documentElement.lang = locale;
+}
+
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.documentElement.lang = 'en';
+  setHmtlLang();
   await initializeDropins();
   decorateTemplateAndTheme();
 

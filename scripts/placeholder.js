@@ -1,10 +1,5 @@
-import { toCamelCase } from './aem.js';
-
-const config = {
-  defaultLocale: 'en',
-  locales: ['en', 'fr'],
-};
-
+import { getMetadata, toCamelCase } from './aem.js';
+import localeConfig from './locale.config.js';
 /**
  * Retrieves the locale path for fetching localized placeholders.
  *
@@ -17,11 +12,11 @@ const config = {
  *   The 'key' property is a string in the format '{locale}/{namespace}'.
  *   The 'path' property is a string in the format 'i18n/{namespace}.json?sheet={locale}'.
  */
-function getLocalePath(locale = config.defaultLocale, namespace = 'common') {
-  const validLocale = config.locales.includes(locale) ? locale : config.defaultLocale;
+function getLocalePath(locale = localeConfig.defaultLocale, namespace = 'common') {
+  const validLocale = localeConfig.locales.includes(locale) ? locale : localeConfig.defaultLocale;
   return {
     key: `${validLocale}/${namespace}`,
-    path: `/i18n/${namespace}.json?sheet=${validLocale}`,
+    path: `/placeholders/${namespace}.json?sheet=${validLocale}`,
   };
 }
 /**
@@ -30,8 +25,6 @@ function getLocalePath(locale = config.defaultLocale, namespace = 'common') {
  * the function will return the cached placeholders. Otherwise, it will fetch the placeholders
  * from the specified JSON file and cache them for future use.
  *
- * @param {string} [locale=config.defaultLocale] - The locale for which to fetch the placeholders.
- *   If not provided, the default locale from the config file will be used.
  * @param {string} [namespace='common'] - The namespace for which to fetch the placeholders.
  *   If not provided, the 'common' namespace will be used.
  *
@@ -39,7 +32,8 @@ function getLocalePath(locale = config.defaultLocale, namespace = 'common') {
  *   The keys of the object are the camelCased versions of the placeholder keys from the JSON file,
  *   and the values are the corresponding placeholder texts.
  */
-async function fetchLocalizedPlaceholders(locale, namespace) {
+async function fetchLocalizedPlaceholders(namespace = 'common') {
+  const locale = getMetadata('locale');
   const { path, pkey: prefix } = getLocalePath(locale, namespace);
   window.placeholders = window.placeholders || {};
   if (!window.placeholders[prefix]) {
