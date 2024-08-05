@@ -22,6 +22,7 @@ import {
 import { getProduct, getSkuFromUrl, trackHistory } from './commerce.js';
 import initializeDropins from './dropins.js';
 import { pushPageViewEvent } from './gtm.js';
+import { getConfigValue } from './configs.js';
 
 const LCP_BLOCKS = [
   'product-list-page',
@@ -280,6 +281,9 @@ async function loadLazy(doc) {
     const { loadLazy: runLazy } = await import('../plugins/experimentation/src/index.js');
     await runLazy(document, { audiences: AUDIENCES }, pluginContext);
   }
+
+  // load third-parties at the end of load lazy intentionally
+  loadGTM();
 }
 
 /**
@@ -287,7 +291,7 @@ async function loadLazy(doc) {
  * without impacting the user experience.
  */
 function loadDelayed() {
-  window.setTimeout(() => import('./delayed.js'), 3000);
+  window.setTimeout(() => import('./delayed.js'), 4000);
   // load anything that can be postponed to the latest here
 }
 
@@ -340,6 +344,29 @@ export async function fetchIndex(indexFile, pageSize = 500) {
 export function getConsent(topic) {
   console.warn('getConsent not implemented');
   return true;
+}
+/**
+ * Loads Google Tag Manager container by the ID
+ */
+async function loadGTM() {
+  const gtmId = await getConfigValue('gtm-id');
+  if (!gtmId) return;
+  const script = document.createRange().createContextualFragment(`
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','${gtmId}');</script>
+  <!-- End Google Tag Manager -->`);
+  document.head.prepend(script);
+  const noscriptFragment = document.createRange().createContextualFragment(`
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  `);
+  document.body.insertAdjacentElement('afterbegin', noscriptFragment);
 }
 
 async function loadPage() {
