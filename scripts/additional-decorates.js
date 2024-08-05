@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { getMetadata } from './aem.js';
+import localeConfig from './locale.config.js';
 
 /**
  * Updates the locale part of a given path with a new locale.
@@ -48,9 +49,10 @@ function updatePathWithLocale(path, newLocale) {
 function decorateLinks(element) {
   const links = element.querySelectorAll('a');
   const locale = getMetadata('locale');
+  const isDefaultLocale = localeConfig.defaultLocale === locale;
   links.forEach((link) => {
     const href = link.getAttribute('href');
-    if (href && href.startsWith('/')) {
+    if (href && href.startsWith('/') && !isDefaultLocale) {
       // Adjust only local URLs
       const newHref = updatePathWithLocale(href, locale);
       link.setAttribute('href', newHref);
