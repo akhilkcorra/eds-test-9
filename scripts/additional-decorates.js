@@ -52,7 +52,12 @@ function decorateLinks(element) {
   const isDefaultLocale = localeConfig.defaultLocale === locale;
   links.forEach((link) => {
     const href = link.getAttribute('href');
-    if (href && href.startsWith('/') && !isDefaultLocale) {
+    if (
+      href
+        && href.startsWith('/')
+        && !isDefaultLocale
+        && !href.startsWith(`/${locale}/`)
+    ) {
       // Adjust only local URLs
       const newHref = updatePathWithLocale(href, locale);
       link.setAttribute('href', newHref);
