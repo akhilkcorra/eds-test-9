@@ -146,8 +146,6 @@ export default async function decorate(block) {
     return Promise.reject();
   }
 
-  renderReviewsOnVisible(block);
-
   pushViewItemEvent(product);
 
   const langDefinitions = {
@@ -277,6 +275,8 @@ export default async function decorate(block) {
           },
           useACDL: true,
         })(block);
+        // add reviews after containers are rendered
+        renderReviewsOnVisible(block);
       } catch (e) {
         console.error(e);
         await errorGettingProduct();
