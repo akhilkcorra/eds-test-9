@@ -22,8 +22,14 @@ export default function Title(ctx) {
   reviewsWrapper.addEventListener('click', () => {
     setTimeout(() => {
       const reviewsSection = document.querySelector('.yotpo.yotpo-main-widget');
+      const headerOffset = 100;
+      const elementPosition = reviewsSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       if (reviewsSection) {
-        reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
       }
     });
   });

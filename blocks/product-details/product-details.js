@@ -13,6 +13,7 @@ import { getConfigValue } from '../../scripts/configs.js';
 import { fetchPlaceholders, loadScript } from '../../scripts/aem.js';
 import { pushViewItemEvent } from '../../scripts/gtm.js';
 import Title from './slots/Title.js';
+import addSkeleton from '../../scripts/components/skeleton/skeleton.js';
 
 // Error Handling (404)
 async function errorGettingProduct(code = 404) {
@@ -119,11 +120,16 @@ async function renderReviewsOnVisible(block) {
   wrapper.setAttribute('data-description', '');
   wrapper.setAttribute('data-yotpo-element-id', '1');
   wrapper.setAttribute('data-image-url', 'http://integration-5ojmyuq-7yvbzwvtkgerq.us-4.magentosite.cloud/media/catalog/product/w/b/wb06-red-0.jpg?auto=webp&quality=80&crop=false&fit=cover&width=960');
+  addSkeleton(wrapper, {
+    height: 400,
+    width: '100%',
+  });
   block.appendChild(wrapper);
+
   const apiKey = await getConfigValue('yotpo-api-key');
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
+      if (entry.isIntersecting && !window?.yotpo?.initialized) {
         loadScript(`//staticw2.yotpo.com/${apiKey}/widget.js`, { id: 'yotpo-script-loader', async: true, defer: true });
         obs.unobserve(entry.target);
       }
