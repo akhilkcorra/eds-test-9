@@ -15,7 +15,7 @@ export default function Title(ctx) {
         <span>${getStar(payload.average, 4)}</span>
         <span>${getStar(payload.average, 5)}</span>
       </span>
-      <a href="javascript:void(0)" class="text-m">${payload.total} Review</a>
+      <span>${payload.total} Review</span>
       `;
   });
   reviewsWrapper.style.cursor = 'pointer';
