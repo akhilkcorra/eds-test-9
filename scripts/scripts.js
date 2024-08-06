@@ -366,7 +366,7 @@ async function loadGTM() {
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   `);
-  document.body.insertAdjacentElement('afterbegin', noscriptFragment);
+  document.body.append(noscriptFragment);
 }
 
 async function loadPage() {

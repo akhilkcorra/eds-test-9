@@ -10,8 +10,9 @@ import ProductDetails from '@dropins/storefront-pdp/containers/ProductDetails.js
 // Libs
 import { getProduct, getSkuFromUrl, setJsonLd } from '../../scripts/commerce.js';
 import { getConfigValue } from '../../scripts/configs.js';
-import { fetchPlaceholders } from '../../scripts/aem.js';
+import { fetchPlaceholders, loadScript } from '../../scripts/aem.js';
 import { pushViewItemEvent } from '../../scripts/gtm.js';
+import Title from './slots/Title.js';
 
 // Error Handling (404)
 async function errorGettingProduct(code = 404) {
@@ -108,6 +109,30 @@ function setMetaTags(product) {
   createMetaTag('twitter:image', metaImage, 'name');
 }
 
+async function renderReviewsOnVisible(block) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'yotpo yotpo-main-widget';
+  wrapper.setAttribute('data-name', 'Endeavor Daytrip Backpack');
+  wrapper.setAttribute('data-product-id', '2250');
+  wrapper.setAttribute('data-product-id', '2250');
+  wrapper.setAttribute('data-url', 'spacedye-hi-lo-tank-updated');
+  wrapper.setAttribute('data-description', '');
+  wrapper.setAttribute('data-yotpo-element-id', '1');
+  wrapper.setAttribute('data-image-url', 'http://integration-5ojmyuq-7yvbzwvtkgerq.us-4.magentosite.cloud/media/catalog/product/w/b/wb06-red-0.jpg?auto=webp&quality=80&crop=false&fit=cover&width=960');
+  block.appendChild(wrapper);
+  const apiKey = await getConfigValue('yotpo-api-key');
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        loadScript(`//staticw2.yotpo.com/${apiKey}/widget.js`, { id: 'yotpo-script-loader', async: true, defer: true });
+        obs.unobserve(entry.target);
+      }
+    });
+  });
+
+  observer.observe(wrapper);
+}
+
 export default async function decorate(block) {
   if (!window.getProductPromise) {
     window.getProductPromise = getProduct(this.props.sku);
@@ -120,6 +145,8 @@ export default async function decorate(block) {
     await errorGettingProduct();
     return Promise.reject();
   }
+
+  renderReviewsOnVisible(block);
 
   pushViewItemEvent(product);
 
@@ -215,6 +242,7 @@ export default async function decorate(block) {
             gap: 'small',
           },
           slots: {
+            Title: (ctx) => Title(ctx, block),
             Actions: (ctx) => {
               // Add to Cart Button
               ctx.appendButton((next, state) => {

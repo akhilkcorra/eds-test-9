@@ -41,5 +41,5 @@ if (getConsent('commerce-collection')) {
 // Third party scripts
 const hubspotUrl = await getConfigValue('hubspot-url');
 if (hubspotUrl) {
-  loadScript('//js-na1.hs-scripts.com/46947912.js', { id: 'hs-script-loader', async: 'true', defer: 'true' });
+  loadScript(hubspotUrl, { id: 'hs-script-loader', async: true, defer: true });
 }
