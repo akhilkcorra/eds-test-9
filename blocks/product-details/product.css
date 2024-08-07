@@ -1,0 +1,5 @@
+@media only screen and (min-width: 1024px) {
+  .pdp-product__content {
+    grid-column: 2 / span 12;
+  }
+}
