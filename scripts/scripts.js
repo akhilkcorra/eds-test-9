@@ -21,6 +21,8 @@ import {
 } from './aem.js';
 import { getProduct, getSkuFromUrl, trackHistory } from './commerce.js';
 import initializeDropins from './dropins.js';
+import localeConfig from './locale.config.js';
+import { decorateLinks } from './additional-decorates.js';
 
 const LCP_BLOCKS = [
   'product-list-page',
@@ -125,6 +127,7 @@ function buildAutoBlocks(main) {
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
+  decorateLinks(main);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
@@ -140,12 +143,20 @@ function preloadFile(href, as) {
   document.head.appendChild(link);
 }
 
+function setHmtlLang() {
+  const metaLocale = localeConfig.currentLocale;
+  const locale = localeConfig.locales.includes(metaLocale)
+    ? metaLocale
+    : localeConfig.defaultLocale;
+  document.documentElement.lang = locale;
+}
+
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.documentElement.lang = 'en';
+  setHmtlLang();
   await initializeDropins();
   decorateTemplateAndTheme();
 
