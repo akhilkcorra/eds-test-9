@@ -144,7 +144,7 @@ function preloadFile(href, as) {
 }
 
 function setHmtlLang() {
-  const metaLocale = getMetadata('locale');
+  const metaLocale = localeConfig.currentLocale;
   const locale = localeConfig.locales.includes(metaLocale)
     ? metaLocale
     : localeConfig.defaultLocale;

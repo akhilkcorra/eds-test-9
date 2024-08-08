@@ -48,7 +48,7 @@ function updatePathWithLocale(path, newLocale) {
  */
 function decorateLinks(element) {
   const links = element.querySelectorAll('a');
-  const locale = getMetadata('locale');
+  const locale = localeConfig.currentLocale;
   const isDefaultLocale = localeConfig.defaultLocale === locale;
   links.forEach((link) => {
     const href = link.getAttribute('href');

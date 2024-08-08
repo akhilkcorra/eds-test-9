@@ -33,7 +33,7 @@ function getLocalePath(locale = localeConfig.defaultLocale, namespace = 'common'
  *   and the values are the corresponding placeholder texts.
  */
 async function fetchLocalizedPlaceholders(namespace = 'common') {
-  const locale = getMetadata('locale');
+  const locale = localeConfig.currentLocale;
   const { path, pkey: prefix } = getLocalePath(locale, namespace);
   window.placeholders = window.placeholders || {};
   if (!window.placeholders[prefix]) {
