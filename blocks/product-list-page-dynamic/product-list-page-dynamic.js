@@ -4,8 +4,9 @@ import {
 import htm from '../../scripts/htm.js';
 import ProductList from './ProductList.js';
 import FacetList from './FacetList.js';
-import { readBlockConfig, sampleRUM } from '../../scripts/aem.js';
+import { sampleRUM } from '../../scripts/aem.js';
 import { priceFieldsFragment, performCatalogServiceQuery } from '../../scripts/commerce.js';
+import { getPLPconfig } from './helpers.js';
 
 const html = htm.bind(h);
 
@@ -547,8 +548,7 @@ class ProductListPage extends Component {
 }
 
 export default async function decorate(block) {
-  const config = readBlockConfig(block);
-
+  const config = getPLPconfig();
   block.textContent = '';
   block.dataset.category = config.category;
   block.dataset.urlpath = config.urlpath;
