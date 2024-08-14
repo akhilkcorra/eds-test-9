@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { sampleRUM } from './aem.js';
+import { loadScript, sampleRUM } from './aem.js';
 import { getConfigValue } from './configs.js';
 import { getConsent } from './scripts.js';
 
@@ -36,4 +36,10 @@ if (getConsent('commerce-collection')) {
   // Load events SDK and collector
   import('./commerce-events-sdk.js');
   import('./commerce-events-collector.js');
+}
+
+// Third party scripts
+const hubspotUrl = await getConfigValue('hubspot-url');
+if (hubspotUrl) {
+  loadScript(hubspotUrl, { id: 'hs-script-loader', async: true, defer: true });
 }
