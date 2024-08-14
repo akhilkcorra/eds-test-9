@@ -5,13 +5,13 @@ function getPLPconfig() {
   const path = window.location.pathname;
   const result = /\/category\/([\w|-]+)$/.exec(path);
   const urlpath = result?.[1];
-  if (!urlpath) {
+  const category = getMetadata('category-id') || null;
+  if (!urlpath || !category) {
     return {
       urlpath: null,
       category: null,
     };
   }
-  const category = getMetadata('categoryId') || '4';
   return {
     urlpath,
     category,
