@@ -8,7 +8,10 @@ const ALLOWED_CONFIGS = ['prod', 'stage', 'dev'];
  * @returns {string} - environment identifier (dev, stage or prod'.
  */
 export const calcEnvironment = () => {
-  const { href } = window.location;
+  // For Sidekick library, app is loaded from iframe, so parent location should be fetched
+  const { href } = (window.location !== window.parent.location)
+    ? window.parent.location
+    : window.location;
   let environment = 'prod';
   if (href.includes('.hlx.page')) {
     environment = 'stage';
@@ -31,7 +34,12 @@ function buildConfigURL(environment) {
   if (env !== 'prod') {
     fileName = `configs-${env}.json`;
   }
-  const configURL = new URL(`${window.location.origin}/${fileName}`);
+
+  // For Sidekick library, app is loaded from iframe, so parent location should be fetched
+  const { origin } = (window.location !== window.parent.location)
+    ? window.parent.location
+    : window.location;
+  const configURL = new URL(`${origin}/${fileName}`);
   return configURL;
 }
 
