@@ -7,7 +7,7 @@ import getProductsInCategory from './queries/products.graphql.js';
 
 import './styles.css';
 
-const configFile = '/configs.json';
+const configFile = 'https://main--eds-test-9--akhilkcorra.hlx.live//configs.json';
 const defaultConfig = 'prod';
 
 /**
