@@ -11,6 +11,11 @@ import ProductDetails from '@dropins/storefront-pdp/containers/ProductDetails.js
 import { getProduct, getSkuFromUrl, setJsonLd } from '../../scripts/commerce.js';
 import { getConfigValue } from '../../scripts/configs.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
+import { pushViewItemEvent } from '../../scripts/gtm.js';
+
+// Slots
+import Title from './slots/Title.js';
+import Content from './slots/Content.js';
 
 // Error Handling (404)
 async function errorGettingProduct(code = 404) {
@@ -120,6 +125,8 @@ export default async function decorate(block) {
     return Promise.reject();
   }
 
+  pushViewItemEvent(product);
+
   const langDefinitions = {
     default: {
       PDP: {
@@ -212,6 +219,8 @@ export default async function decorate(block) {
             gap: 'small',
           },
           slots: {
+            Title: (ctx) => Title(ctx, block),
+            Content: (ctx) => Content(ctx, block),
             Actions: (ctx) => {
               // Add to Cart Button
               ctx.appendButton((next, state) => {
